@@ -1,0 +1,35 @@
+function [mSigEtaEig, mSigEta]=MVCM_eigen(efitEtas)
+% MVCM_eigen is to implement Zhu's (2010) method of functional principal component analysis in MVCM
+%
+% Input:
+%     efitEtas    - a n x L0 x m matrix of estimated eta
+% Output:
+%     mSigEta     - a L0 x L0 x m matrix of covariance matrix of etas for each individual measures
+%     mSigEtaEig  - a L0 x L0+1 x m matrix of eigenvaules and eigenvectors of individaul covariance matrix of etas. 
+%                   The first column is eigenvalues and the rest are the respective eigenvectors.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Please run  
+%     [ResEtas,efitEtas,eSigEta] = MVCM_sif(arclength,ResYdesign,kstr) or [ResEtas,efitEtas,eSigEta] = MVCM_sif2(arclength,ResYdesign,kstr)
+% before you use MVCM_eigen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% September 3, 2010 @ AA
+%     
+
+
+
+    L0=size()
+    mSigEta=zeros(L0,L0,m);
+    mSigEtaEig=zeros(L0,L0+1,m);
+    
+    for mii=1:m
+        mSigEta(:,:,mii)=efitEtas(:,:,mii)'*efitEtas(:,:,mii);
+        [v d]=eig(mSigEta(:,:,mii));
+        dd=diag(d);
+        [dd,ind]=sort(dd,'descend');
+        v=v(:,ind);
+        dd=dd/sum(dd);
+        vd=[dd v'];
+        mSigEtaEig(:,:,mii)=vd;
+    end
+
+end

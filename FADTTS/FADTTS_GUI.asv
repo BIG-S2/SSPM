@@ -1,0 +1,1018 @@
+function varargout = FADTTS_GUI(varargin)
+% FADTTS_GUI M-file for FADTTS_GUI.fig
+%      FADTTS_GUI, by itself, creates a new FADTTS_GUI or raises the existing
+%      singleton*.
+%
+%      H = FADTTS_GUI returns the handle to a new FADTTS_GUI or the handle to
+%      the existing singleton*.
+%
+%      FADTTS_GUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in FADTTS_GUI.M with the given input arguments.
+%
+%      FADTTS_GUI('Property','Value',...) creates a new FADTTS_GUI or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before FADTTS_GUI_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to FADTTS_GUI_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help FADTTS_GUI
+
+% Last Modified by GUIDE v2.5 23-Nov-2010 23:03:06
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @FADTTS_GUI_OpeningFcn, ...
+                   'gui_OutputFcn',  @FADTTS_GUI_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before FADTTS_GUI is made visible.
+function FADTTS_GUI_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to FADTTS_GUI (see VARARGIN)
+
+clr=[0.84,0.84,0.84];
+set(hObject,'Color',clr);
+set(handles.text1,'BackgroundColor',clr);
+set(handles.uipanel1,'BackgroundColor',clr);
+set(handles.uipanel2,'BackgroundColor',clr);
+set(handles.uipanel4,'BackgroundColor',clr);
+set(handles.uipanel5,'BackgroundColor',clr);
+set(handles.TractData,'BackgroundColor',clr);
+set(handles.DesignData,'BackgroundColor',clr);
+set(handles.DiffusionData,'BackgroundColor',clr);
+set(handles.DiffusionPlot,'BackgroundColor',clr);
+set(handles.CoefficientsPlot,'BackgroundColor',clr);
+set(handles.EigensPlot,'BackgroundColor',clr);
+set(handles.CBandsPlot,'BackgroundColor',clr);
+set(handles.CMatrixData,'BackgroundColor',clr);
+set(handles.B0VectorData,'BackgroundColor',clr);
+set(handles.PvaluesPlot,'BackgroundColor',clr);
+
+
+set(hObject,'Color',clr);
+set(hObject, 'Units','characters');
+
+set(hObject, 'Name','FADTTS for Windows Version 1.01''Position', [86, 54, 163, 10]); 
+
+im=imread('uncLogo.jpg');
+handles.h1 = image(im,'Parent',handles.axes1);
+set(handles.axes1,'Visible','off')  
+
+
+im=imread('uncbiaslogo.jpg');
+handles.h2 = image(im,'Parent',handles.axes2);
+set(handles.axes2,'Visible','off')
+
+handles.ind=[0 0 0 0 0];
+figure()
+set(gcf, 'Units','characters');
+set(gcf,'NumberTitle','off','Name','FADTTS Output','MenuBar','none','Position',[86, 11, 163, 40]);
+
+% Choose default command line output for FADTTS_GUI
+handles.output = hObject;
+
+% Update handles structure
+guidata(hObject, handles);
+
+% UIWAIT makes FADTTS_GUI wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = FADTTS_GUI_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+
+% --- Executes on button press in TractData.
+function TractData_Callback(hObject, eventdata, handles)
+% hObject    handle to TractData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+cwd=cd; %current work directory
+[file_name, dir_name, filter_index] = uigetfile( ...
+        {
+        '*.mat','MAT-files (*.mat)'; ...
+        }, ...
+        'File(s) Selector');
+cd(cwd);
+handles.ind(1)=filter_index;
+
+if(filter_index ~= 0)
+   output = load([dir_name filesep file_name]);
+   bb=struct2cell(output);
+   handles.TrD=bb{1};
+   
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Tract data was loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject,handles);
+end
+
+if handles.ind==[1 1 1 0 0]
+   pause(1)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Transferring raw data, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   nofeatures=size(handles.DiD,1);
+   
+   [NoSetup, arclength, Xdesign, Ydesign]=MVCM_read(handles.TrD, handles.DeD, handles.DiD, nofeatures);
+   handles.NoSetup=NoSetup;
+   handles.arclength=arclength;
+   handles.Xdesign=Xdesign;
+   handles.Ydesign=Ydesign;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'All raw data were transferred','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Estimating parameters, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   [mh]=MVCM_lpks_wob(NoSetup,arclength,Xdesign,Ydesign); 
+   handles.mh=mh;
+   [efitBetas,efitBetas1,InvSigmats,efitYdesign]=MVCM_lpks_wb1(NoSetup,arclength,Xdesign,Ydesign,mh);
+   handles.efitBetas=efitBetas;
+   handles.efitBetas1=efitBetas1;
+   handles.InvSigmats=InvSigmats;
+   ResYdesign=Ydesign-efitYdesign;
+   [ResEtas,efitEtas,eSigEta]=MVCM_sif(arclength,ResYdesign);
+   handles.ResEtas=ResEtas;
+   handles.efitEtas=efitEtas;
+   handles.eSigEta=eSigEta;
+   [mSigEtaEig, mSigEta]=MVCM_eigen(efitEtas);
+   handles.mSigEtaEig=mSigEtaEig;
+   handles.mSigEta=mSigEta;
+   [ebiasBetas] = MVCM_bias(NoSetup,arclength,Xdesign,Ydesign,InvSigmats,mh);
+   handles.ebiasBetas=ebiasBetas;
+   [Gvalue]=MVCM_cb_Gval(arclength,Xdesign,ResYdesign,InvSigmats,mh,500);
+   [CBands]=MVCM_CBands(NoSetup(1),0.05,Gvalue,efitBetas,ebiasBetas);
+   handles.CBands=CBands;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Parameters were estimated','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject,handles);
+end
+
+
+% --- Executes on button press in DesignData.
+function DesignData_Callback(hObject, eventdata, handles)
+% hObject    handle to DesignData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+cwd=cd; %current work directory
+[file_name, dir_name, filter_index] = uigetfile( ...
+        {
+        '*.mat','MAT-files (*.mat)'; ...
+        }, ...
+        'File(s) Selector');
+cd(cwd);
+
+handles.ind(2)=filter_index;
+
+if(filter_index ~= 0)
+   output = load([dir_name filesep file_name]);
+   bb=struct2cell(output);
+   handles.DeD=bb{1};
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Design data was loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject,handles);
+end
+
+
+if handles.ind==[1 1 1 0 0]
+   pause(1)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Transferring raw data, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   nofeatures=size(handles.DiD,1);
+   [NoSetup, arclength, Xdesign, Ydesign]=MVCM_read(handles.TrD, handles.DeD, handles.DiD, nofeatures);
+   handles.NoSetup=NoSetup;
+   handles.arclength=arclength;
+   handles.Xdesign=Xdesign;
+   handles.Ydesign=Ydesign;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'All raw data were transferred','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Estimating parameters, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   [mh]=MVCM_lpks_wob(NoSetup,arclength,Xdesign,Ydesign); 
+   handles.mh=mh;
+   [efitBetas,efitBetas1,InvSigmats,efitYdesign]=MVCM_lpks_wb1(NoSetup,arclength,Xdesign,Ydesign,mh);
+   handles.efitBetas=efitBetas;
+   handles.efitBetas1=efitBetas1;
+   handles.InvSigmats=InvSigmats;
+   ResYdesign=Ydesign-efitYdesign;
+   [ResEtas,efitEtas,eSigEta]=MVCM_sif(arclength,ResYdesign);
+   handles.ResEtas=ResEtas;
+   handles.efitEtas=efitEtas;
+   handles.eSigEta=eSigEta;
+   [mSigEtaEig, mSigEta]=MVCM_eigen(efitEtas);
+   handles.mSigEtaEig=mSigEtaEig;
+   handles.mSigEta=mSigEta;
+   [ebiasBetas] = MVCM_bias(NoSetup,arclength,Xdesign,Ydesign,InvSigmats,mh);
+   handles.ebiasBetas=ebiasBetas;
+   [Gvalue]=MVCM_cb_Gval(arclength,Xdesign,ResYdesign,InvSigmats,mh,500);
+   [CBands]=MVCM_CBands(NoSetup(1),0.05,Gvalue,efitBetas,ebiasBetas);
+   handles.CBands=CBands;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Parameters were estimated','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject,handles);
+end
+
+% --- Executes on button press in DiffusionData.
+function DiffusionData_Callback(hObject, eventdata, handles)
+% hObject    handle to DiffusionData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+cwd=cd; %current work directory
+[file_name, dir_name, filter_index] = uigetfile( ...
+        {
+        '*.mat','MAT-files (*.mat)'; ...
+        }, ...
+        'File(s) Selector');
+cd(cwd);
+
+handles.ind(3)=filter_index;
+if(filter_index ~= 0)
+   output=load([dir_name filesep file_name]);
+   bb=struct2cell(output);
+   handles.DiD=bb{1};
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Diffusion data was loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+end
+
+h=gcf;
+guidata(h, handles);
+guidata(hObject,handles);
+
+if handles.ind==[1 1 1 0 0]
+   pause(1)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Transferring raw data, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   nofeatures=size(handles.DiD,1);
+   [NoSetup, arclength, Xdesign, Ydesign]=MVCM_read(handles.TrD, handles.DeD, handles.DiD, nofeatures);
+   handles.NoSetup=NoSetup;
+   handles.arclength=arclength;
+   handles.Xdesign=Xdesign;
+   handles.Ydesign=Ydesign;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'All raw data were transferred','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Estimating parameters, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   pause(2)
+   [mh]=MVCM_lpks_wob(NoSetup,arclength,Xdesign,Ydesign); 
+   handles.mh=mh;
+   [efitBetas,efitBetas1,InvSigmats,efitYdesign]=MVCM_lpks_wb1(NoSetup,arclength,Xdesign,Ydesign,mh);
+   handles.efitBetas=efitBetas;
+   handles.efitBetas1=efitBetas1;
+   handles.InvSigmats=InvSigmats;
+   ResYdesign=Ydesign-efitYdesign;
+   [ResEtas,efitEtas,eSigEta]=MVCM_sif(arclength,ResYdesign);
+   handles.ResEtas=ResEtas;
+   handles.efitEtas=efitEtas;
+   handles.eSigEta=eSigEta;
+   [mSigEtaEig, mSigEta]=MVCM_eigen(efitEtas);
+   handles.mSigEtaEig=mSigEtaEig;
+   handles.mSigEta=mSigEta;
+   [ebiasBetas] = MVCM_bias(NoSetup,arclength,Xdesign,Ydesign,InvSigmats,mh);
+   handles.ebiasBetas=ebiasBetas;
+   [Gvalue]=MVCM_cb_Gval(arclength,Xdesign,ResYdesign,InvSigmats,mh,500);
+   [CBands]=MVCM_CBands(NoSetup(1),0.05,Gvalue,efitBetas,ebiasBetas);
+   handles.CBands=CBands;
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Parameters were estimated','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject,handles);
+end
+
+% --- Executes on button press in DiffusionPlot.
+function DiffusionPlot_Callback(hObject, eventdata, handles)
+% hObject    handle to DiffusionPlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if handles.ind(1)*handles.ind(2)*handles.ind(3)==0
+   h=subplot('position',[0.1 0.15 .85 0.65]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Not all necessary data was successfully loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+else    
+   delta=0.85/handles.NoSetup(4);
+   AA='Diffusion ';
+   II=num2str(1:handles.NoSetup(4));
+   Y.max1=max(max(max(handles.Ydesign)));
+   Y.min1=min(min(min(handles.Ydesign)));
+   for i=1:handles.NoSetup(4) 
+       BB=sprintf('%s%s',AA,II(3*(i-1)+1));
+       h=subplot('position',[0.1+delta*(i-1) 0.15 delta 0.65]);
+       axes(h);
+       for k=1:handles.NoSetup(1) 
+           plot(handles.arclength, handles.Ydesign(k,:,i), 'r-', 'Linewidth', 1);
+           xlim([0,size(handles.arclength,1)-1]);
+           ylim([Y.min1,Y.max1]);
+           hold on; 
+       end 
+       if i>1
+          set(gca,'YTickLabel',{})
+       end
+       xlabel('arc-length');
+       title(BB);
+       hold off;
+    end 
+end
+
+
+% --- Executes on button press in CoefficientsPlot.
+function CoefficientsPlot_Callback(hObject, eventdata, handles)
+% hObject    handle to CoefficientsPlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if handles.ind(1)*handles.ind(2)*handles.ind(3)==0
+   h=subplot('position',[0.1 0.15 .85 0.65]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Not all necessary data was successfully loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+else 
+   delta=0.85/handles.NoSetup(3);
+   AA1='D ';
+   II1=num2str(1:handles.NoSetup(4));
+   AA2='Covariates ';
+   II2=num2str(0:handles.NoSetup(3)-1);
+   cstring='rgbcmyk';
+   for i=1:handles.NoSetup(3) 
+       BB2=sprintf('%s%s',AA2,II2(3*(i-1)+1));
+       h=subplot('position',[0.1+delta*(i-1) 0.15 delta-0.05 0.65]);
+       axes(h);
+       BB=[];
+       for k=1:handles.NoSetup(4) 
+           BB1=sprintf('%s%s',AA1,II1(3*(k-1)+1));
+           BB=strvcat(BB,BB1);
+           plot(handles.arclength, handles.efitBetas(i,:,k), cstring(k), 'Linewidth', 2);
+           hold on; 
+       end 
+       if i==1
+          yup=max(max(handles.efitBetas(i,:,:)))*1.2;
+          ylow=min(min(handles.efitBetas(i,:,:)));
+          ylim([ylow,yup]);
+          hh=legend(BB,'location','NorthWest');
+          set(hh,'FontSize',6);
+       end
+       xlim([0,size(handles.arclength,1)-1]);
+       xlabel('arc-length');
+       title(BB2); 
+       hold off;
+   end
+end
+
+
+% --- Executes on button press in EigensPlot.
+function EigensPlot_Callback(hObject, eventdata, handles)
+% hObject    handle to EigensPlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if handles.ind(1)*handles.ind(2)*handles.ind(3)==0
+   h=subplot('position',[0.1 0.15 .85 0.65]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Not all necessary data was successfully loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+else 
+   delta=0.97/4;
+   h=subplot('position',[0.03 0.15 delta-0.03 0.70]);
+   axes(h);
+   cstring='rgbcmyk';
+   AA1='D ';
+   II1=num2str(1:handles.NoSetup(4));
+   BB=[];
+   for k=1:handles.NoSetup(4) 
+       BB1=sprintf('%s%s',AA1,II1(3*(k-1)+1));
+       BB=strvcat(BB,BB1);
+       plot(handles.mSigEtaEig(1:8,1,k), cstring(k), 'Linewidth', 2);
+       hold on; 
+   end 
+   xlim([1 8]); 
+   hh=legend(BB,'location','NorthEast');
+   set(hh,'FontSize',6);
+   title('First 8 eigenvalues'); 
+   hold off;
+   II2=cell(3,1);
+   II2{1}='The first Eigenfunctions';
+   II2{2}='The second Eigenfunctions';
+   II2{3}='The third Eigenfunctions';
+   cstring='rgbcmyk';
+   for i=1:3 
+       h=subplot('position',[0.03+delta*i 0.15 delta-0.03 0.70]);
+       axes(h);
+       for k=1:handles.NoSetup(4) 
+           plot(handles.arclength, handles.mSigEtaEig(i,2:end,k), cstring(k), 'Linewidth', 2);
+           hold on; 
+       end 
+       xlim([0,size(handles.arclength,1)-1]);
+       xlabel('arc-length');
+       title(II2{i}); 
+       hold off;
+   end
+end   
+
+
+% --- Executes on button press in CBandsPlot.
+function CBandsPlot_Callback(hObject, eventdata, handles)
+% hObject    handle to CBandsPlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if handles.ind(1)*handles.ind(2)*handles.ind(3)==0
+   h=subplot('position',[0.1 0.15 .85 0.65]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Not all necessary data was successfully loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+else 
+   delta1=0.92/handles.NoSetup(4);
+   delta2=0.88/handles.NoSetup(3);
+   AA1='Covariates ';
+   II1=num2str(0:handles.NoSetup(3)-1);
+   AA2='Diffusion ';
+   II2=num2str(1:handles.NoSetup(4));
+   %%close()
+   %%figure()
+   %%SSize=get(0,'ScreenSize');
+   %%set(gcf, 'Units' , 'pixels');
+   %%set(gcf,'NumberTitle','off','Name','FADTTS Output','MenuBar','none','Position',[45, SSize(4)-715, 980, 420])
+   for k=1:handles.NoSetup(4)
+       for i=1:handles.NoSetup(3)
+           BB1=sprintf('%s%s',AA1,II1(3*(i-1)+1));
+           BB2=sprintf('%s%s',AA2,II2(3*(k-1)+1));
+   
+           h=subplot('position',[0.08+delta1*(k-1) 0.93-delta2*i delta1-0.03 delta2]);
+           axes(h);
+           plot(handles.arclength, handles.efitBetas(i,:,k), 'b-', 'Linewidth', 2);
+           hold on;
+           plot(handles.arclength,handles.CBands(2*(i-1)+1,:,k),'--r','LineWidth', 2);
+           hold on;
+           plot(handles.arclength,handles.CBands(2*i,:,k),'--r','LineWidth', 2);
+          if i==handles.NoSetup(3)
+             xlabel('arc-length');
+          end
+          if k==1
+             ylabel(BB1);
+          end
+          if i==1
+             title(BB2);
+          end
+         if i~=handles.NoSetup(3)
+            set(gca,'XTickLabel',{});
+            set(gca,'XTick',[]);
+         end
+         set(gca,'XLim',[0 size(handles.arclength,1)-1]);
+         hold off;
+      end
+   end
+   
+end
+   
+% --- Executes on button press in CMatrixData.
+function CMatrixData_Callback(hObject, eventdata, handles)
+% hObject    handle to CMatrixData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+cwd=cd; %current work directory
+[file_name, dir_name, filter_index] = uigetfile( ...
+        {
+        '*.mat','MAT-files (*.mat)'; ...
+        }, ...
+        'File(s) Selector');
+cd(cwd);
+
+handles.ind(4)=filter_index;
+if(filter_index ~= 0)
+   output = load([dir_name filesep file_name]);
+   bb=struct2cell(output);
+   handles.CMatrix=bb{1};
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'CMatrix was loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   h=gcf;
+   guidata(h, handles);
+   guidata(hObject, handles);
+end
+
+if handles.ind==[1 1 1 1 1]
+   pause(1)
+   if (size(handles.CMatrix,1)==1) & (size(handles.B0Vector,1)==1)
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Individual hypothesis testing, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      pause(2)
+      NoSetup1=handles.NoSetup;
+      NoSetup1(4)=1;
+      LTstat0=zeros(handles.NoSetup(2),handles.NoSetup(4));
+      pstat0=zeros(2,handles.NoSetup(4));
+      for m=1:handles.NoSetup(4)
+          [Gstat,Lstat]=MVCM_ht_stat(NoSetup1,handles.arclength,handles.Xdesign,handles.efitBetas(:,:,m),handles.eSigEta(m,m,:,:),handles.CMatrix,handles.B0Vector,handles.ebiasBetas(:,:,m));
+          pstat0(1,m)=Gstat;
+          LTstat0(:,m)=Lstat;
+          [Gpval]=MVCM_bstrp_pvalue3(NoSetup1,handles.arclength,handles.Xdesign,handles.Ydesign(:,:,m),handles.efitBetas1(:,:,m),handles.InvSigmats(:,:,:,m),handles.mh,handles.CMatrix,handles.B0Vector,Gstat,1000); 
+          pstat0(2,m)=Gpval;
+      end
+      handles.GT0=pstat0;
+      handles.LT0=LTstat0;
+      handles.LT0p=1-chi2cdf(LTstat0,1);
+      h=gcf;
+      guidata(h, handles);
+      guidata(hObject, handles);
+      
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      BB1='The global test statistics are, respectively, ';
+      BB2='The global p-values are, respectively, ';
+      AA1=', ';
+      AA2='and ';
+      
+      for m=1:handles.NoSetup(4)
+          II1=num2str(handles.GT0(1,m));
+          II2=num2str(handles.GT0(2,m));
+          if m==handles.NoSetup(4)             
+             BB1=sprintf('%s%s%s',BB1,AA2,II1);          
+             BB2=sprintf('%s%s%s',BB2,AA2,II2); 
+          else
+             BB1=sprintf('%s%s%s',BB1,II1,AA1);          
+             BB2=sprintf('%s%s%s',BB2,II2,AA1);
+          end
+      end
+      text(0,.15,BB1,'FontSize',10,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      text(0,-.15,BB2,'FontSize',10,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end
+   if (size(handles.CMatrix,1)==handles.NoSetup(4)) & (size(handles.B0Vector,1)==handles.NoSetup(4))
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Overall hypothesis testing, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      pause(2)
+      [Gstat,Lstat]=MVCM_ht_stat(handles.NoSetup,handles.arclength,handles.Xdesign,handles.efitBetas,handles.eSigEta,handles.CMatrix,handles.B0Vector,handles.ebiasBetas);
+      [Gpval]=MVCM_bstrp_pvalue3(handles.NoSetup,handles.arclength,handles.Xdesign,handles.Ydesign,handles.efitBetas1,handles.InvSigmats,handles.mh,handles.CMatrix,handles.B0Vector,Gstat,1000); 
+      LTstat=Lstat;
+      pstat=zeros(2,1);
+      pstat(1)=Gstat;
+      pstat(2)=Gpval;
+      handles.GT=pstat;
+      handles.LT=LTstat;
+      handles.LTp=1-chi2cdf(LTstat,handles.NoSetup(4));
+      h=gcf;
+      guidata(h, handles);
+      guidata(hObject, handles);
+      
+      AA1='The global test statistics is ';
+      II1=num2str(handles.GT(1));
+      BB1=sprintf('%s%s',AA1,II1);
+      AA2='The global p-value is ';
+      II2=num2str(handles.GT(2));
+      BB2=sprintf('%s%s',AA2,II2);
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,.15,BB1,'FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      text(0,-.15,BB2,'FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end
+   if (size(handles.CMatrix,1)~=size(handles.B0Vector,1))
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Test designs do not match','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end   
+end
+
+% --- Executes on button press in B0VectorData.
+function B0VectorData_Callback(hObject, eventdata, handles)
+% hObject    handle to B0VectorData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+cwd=cd; %current work directory
+[file_name, dir_name, filter_index] = uigetfile( ...
+        {
+        '*.mat','MAT-files (*.mat)'; ...
+        }, ...
+        'File(s) Selector');
+cd(cwd);
+
+handles.ind(5)=filter_index;
+if(filter_index ~= 0)
+   output = load([dir_name filesep file_name]);
+   bb=struct2cell(output);
+   handles.B0Vector = bb{1};
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'B0Vector was loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+end
+
+h=gcf;
+guidata(h, handles);
+guidata(hObject, handles);
+
+if handles.ind==[1 1 1 1 1]
+   pause(1)
+   if (size(handles.CMatrix,1)==1) & (size(handles.B0Vector,1)==1)
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Individual hypothesis testing, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      pause(2)
+      NoSetup1=handles.NoSetup;
+      NoSetup1(4)=1;
+      LTstat0=zeros(handles.NoSetup(2),handles.NoSetup(4));
+      pstat0=zeros(2,handles.NoSetup(4));
+      for m=1:handles.NoSetup(4)
+          [Gstat,Lstat]=MVCM_ht_stat(NoSetup1,handles.arclength,handles.Xdesign,handles.efitBetas(:,:,m),handles.eSigEta(m,m,:,:),handles.CMatrix,handles.B0Vector,handles.ebiasBetas(:,:,m));
+          pstat0(1,m)=Gstat;
+          LTstat0(:,m)=Lstat;
+          [Gpval]=MVCM_bstrp_pvalue3(NoSetup1,handles.arclength,handles.Xdesign,handles.Ydesign(:,:,m),handles.efitBetas1(:,:,m),handles.InvSigmats(:,:,:,m),handles.mh,handles.CMatrix,handles.B0Vector,Gstat,1000); 
+          pstat0(2,m)=Gpval;
+      end
+      handles.GT0=pstat0;
+      handles.LT0=LTstat0;
+      handles.LT0p=1-chi2cdf(LTstat0,1);
+      h=gcf;
+      guidata(h, handles);
+      guidata(hObject, handles);
+      
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      BB1='The global test statistics are, respectively, ';
+      BB2='The global p-values are, respectively, ';
+      AA1=', ';
+      AA2='and ';
+      
+      for m=1:handles.NoSetup(4)
+          II1=num2str(handles.GT0(1,m));
+          II2=num2str(handles.GT0(2,m));
+          if m==handles.NoSetup(4)             
+             BB1=sprintf('%s%s%s',BB1,AA2,II1);          
+             BB2=sprintf('%s%s%s',BB2,AA2,II2); 
+          else
+             BB1=sprintf('%s%s%s',BB1,II1,AA1);          
+             BB2=sprintf('%s%s%s',BB2,II2,AA1);
+          end
+      end
+      text(0,.15,BB1,'FontSize',10,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      text(0,-.15,BB2,'FontSize',10,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end
+   if (size(handles.CMatrix,1)==handles.NoSetup(4)) & (size(handles.B0Vector,1)==handles.NoSetup(4))
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Overall hypothesis testing, please wait...','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      pause(2)
+      [Gstat,Lstat]=MVCM_ht_stat(handles.NoSetup,handles.arclength,handles.Xdesign,handles.efitBetas,handles.eSigEta,handles.CMatrix,handles.B0Vector,handles.ebiasBetas);
+      [Gpval]=MVCM_bstrp_pvalue3(handles.NoSetup,handles.arclength,handles.Xdesign,handles.Ydesign,handles.efitBetas1,handles.InvSigmats,handles.mh,handles.CMatrix,handles.B0Vector,Gstat,1000); 
+      LTstat=Lstat;
+      pstat=zeros(2,1);
+      pstat(1)=Gstat;
+      pstat(2)=Gpval;
+      handles.GT=pstat;
+      handles.LT=LTstat;
+      handles.LTp=1-chi2cdf(LTstat,handles.NoSetup(4));
+      h=gcf;
+      guidata(h, handles);
+      guidata(hObject, handles);
+      
+      AA1='The global test statistics is ';
+      II1=num2str(handles.GT(1));
+      BB1=sprintf('%s%s',AA1,II1);
+      AA2='The global p-value is ';
+      II2=num2str(handles.GT(2));
+      BB2=sprintf('%s%s',AA2,II2);
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,.15,BB1,'FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+      text(0,-.15,BB2,'FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end
+   if (size(handles.CMatrix,1)~=size(handles.B0Vector,1))
+      h=subplot('position',[0.05 0.2 .90 0.6]);
+      axes(h);
+      plot(2,2)
+      xlim([-1,1]);
+      ylim([-1,1]);
+      set(gca,'XTickLabel',{});
+      set(gca,'XTick',[]);
+      set(gca,'YTickLabel',{});
+      set(gca,'YTick',[]);
+      text(0,0,'Test designs do not match','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+   end   
+end
+
+% --- Executes on button press in PvaluesPlot.
+function PvaluesPlot_Callback(hObject, eventdata, handles)
+% hObject    handle to PvaluesPlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if handles.ind(1)*handles.ind(2)*handles.ind(3)*handles.ind(4)*handles.ind(5)==0
+   h=subplot('position',[0.05 0.2 .90 0.6]);
+   axes(h);
+   plot(2,2)
+   xlim([-1,1]);
+   ylim([-1,1]);
+   set(gca,'XTickLabel',{});
+   set(gca,'XTick',[]);
+   set(gca,'YTickLabel',{});
+   set(gca,'YTick',[]);
+   text(0,0,'Not all necessary data was successfully loaded','FontSize',12,'HorizontalAlignment','center','EdgeColor','red','LineWidth',2);
+end
+
+if (size(handles.CMatrix,1)==1) & (handles.ind(1)*handles.ind(2)*handles.ind(3)*handles.ind(4)*handles.ind(5)==1)
+   delta=0.85/handles.NoSetup(4);
+   AA='Diffusion ';
+   II=num2str(1:handles.NoSetup(4));
+   Y.max2=max(max(-log10(handles.LT0p)));
+   Y.min2=min(min(-log10(handles.LT0p)));
+   for i=1:handles.NoSetup(4) 
+       BB=sprintf('%s%s',AA,II(3*(i-1)+1));
+       h=subplot('position',[0.1+delta*(i-1) 0.15 delta 0.65]);
+       axes(h);
+       plot(handles.arclength, -log10(handles.LT0p(:,i)), 'r-', 'Linewidth', 1);
+       xlim([0,size(handles.arclength,1)-1]);
+       ylim([Y.min2,Y.max2]);
+       hold on; 
+       if i==1
+          ylabel('-log10 local p-values')
+       end
+       if i>1
+          set(gca,'YTickLabel',{})
+       end
+       xlabel('arc-length');
+       title(BB);
+       hold off;
+   end
+end
+
+if (size(handles.CMatrix,1)>1) & (handles.ind(1)*handles.ind(2)*handles.ind(3)*handles.ind(4)*handles.ind(5)==1)
+  h=subplot('position',[0.15 0.2 .75 0.6]);
+  axes(h);
+  Y.max2=max(max(-log10(handles.LTp)));
+  Y.min2=min(min(-log10(handles.LTp)));
+  plot(handles.arclength, -log10(handles.LTp), 'r-', 'Linewidth', 1);
+  xlim([0,size(handles.arclength,1)-1]);
+  ylim([Y.min2,Y.max2]);
+  xlabel('arc-length');
+  ylabel('-log10 local p-values')
+  title('All diffusion properties together');
+  hold off;
+end
+

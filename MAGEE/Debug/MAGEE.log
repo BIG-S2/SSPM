@@ -1,0 +1,49 @@
+﻿生成启动时间为 2017/12/13 星期三 下午 3:47:44。
+     1>项目“F:\SSPM-V2.1\MAGEE\MAGEE.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files (x86)\VS2013\VC\bin\CL.exe /c /I"C:\Program Files\MATLAB\R2013b\extern\include" /I"C:\Program Files\MATLAB\R2016a\extern\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MAGEE.cpp predef.cpp
+         predef.cpp
+     1>f:\sspm-v2.1\magee\predef.cpp(262): warning C4305: “初始化”: 从“double”到“float”截断
+     1>f:\sspm-v2.1\magee\predef.cpp(279): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(281): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(399): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(428): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(437): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(451): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(650): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files (x86)\vs2013\vc\include\stdio.h(211) : 参见“fopen”的声明
+     1>f:\sspm-v2.1\magee\predef.cpp(918): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(943): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(944): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1033): warning C4244: “+=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1039): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1177): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1229): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1533): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1661): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(1804): warning C4244: “+=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(2037): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\predef.cpp(2052): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+         MAGEE.cpp
+     1>f:\sspm-v2.1\magee\magee.cpp(41): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files (x86)\vs2013\vc\include\stdio.h(356) : 参见“sprintf”的声明
+     1>f:\sspm-v2.1\magee\magee.cpp(147): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(182): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(609): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(617): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(700): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(880): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(884): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(894): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(895): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(899): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(900): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(901): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(935): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>f:\sspm-v2.1\magee\magee.cpp(939): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+         正在生成代码...
+     1>已完成生成项目“F:\SSPM-V2.1\MAGEE\MAGEE.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:01.29
